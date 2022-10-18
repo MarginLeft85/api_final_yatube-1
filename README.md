@@ -56,9 +56,9 @@ http://127.0.0.1:8000/api/v1/posts/
 http://127.0.0.1:8000/api/v1/posts/
 
 {
-"text": "string",
-"image": "string",
-"group": 0
+  "text": "string",
+  "image": "string",
+  "group": 0
 }
 
 ```
@@ -105,8 +105,8 @@ http://127.0.0.1:8000/api/v1/follow/
 http://127.0.0.1:8000/api/v1/jwt/create/
 
 {
-"username": "string",
-"password": "string"
+  "username": "string",
+  "password": "string"
 }
 
 ```
@@ -117,8 +117,8 @@ http://127.0.0.1:8000/api/v1/jwt/create/
 http://127.0.0.1:8000/api/v1/jwt/refresh/
 
 {
-"username": "string",
-"password": "string"
+  "username": "string",
+  "password": "string"
 }
 
 ```
@@ -129,7 +129,7 @@ http://127.0.0.1:8000/api/v1/jwt/refresh/
 http://127.0.0.1:8000/api/v1/jwt/refresh/
 
 {
-"token": "string"
+  "token": "string"
 }
 
 ```
