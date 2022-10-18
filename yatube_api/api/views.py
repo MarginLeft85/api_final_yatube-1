@@ -60,7 +60,8 @@ class FollowViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     # добавляем поле для поиска по following.username
     filter_backends = (filters.SearchFilter,)
-    search_fields = ('following__username',)
+    # данные будут искаться по обоем полям (OR)
+    search_fields = ('following__username', 'user__username')
 
     def get_queryset(self):
         """Определяем метод get_queryset, чтобы выполнить фильтрацию объектов

@@ -17,8 +17,8 @@ cd api_final_yatube
 Cоздать и активировать виртуальное окружение:
 
 ```
-<<<<<<< HEAD
 python -m venv venv
+```
 
 ```
 source venv/Scripts/activate
@@ -41,3 +41,32 @@ python manage.py migrate
 ```
 python manage.py runserver
 ```
+
+### Некоторые примеры запросов к API:
+
+Получение публикаций (GET):
+
+```
+http://127.0.0.1:8000/api/v1/posts/
+```
+
+Создание публикации (POST):
+
+```
+http://127.0.0.1:8000/api/v1/posts/
+
+{
+"text": "string",
+"image": "string",
+"group": 0
+}
+
+```
+
+Получение конкретной публикации по id (GET):
+
+```
+http://127.0.0.1:8000/api/v1/posts/{id}/
+```
+
+
