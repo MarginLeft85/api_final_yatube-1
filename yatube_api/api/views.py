@@ -1,21 +1,29 @@
 from django.contrib.auth import get_user_model
-from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import filters
+from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework import viewsets
 from rest_framework import permissions
 from rest_framework.pagination import LimitOffsetPagination
 
+from .permissions import AuthorOrReadOnly
 from .serializers import CommentSerializer, FollowSerializer, \
     GroupSerializer, PostSerializer
-from posts.models import Post, Group
+from posts.models import Group, Post
 
 User = get_user_model()
+
+
+class GetPostViewSet(
+        CreateModelMixin, ListModelMixin, viewsets.GenericViewSet):
+    """Собираем вьюсет, который работает только с create и retrieve."""
+    pass
 
 
 class CommentViewSet(viewsets.ModelViewSet):
     """Вьюсет для комментов."""
     serializer_class = CommentSerializer
+    permission_classes = (AuthorOrReadOnly,)
 
     def get_queryset(self):
         """Определяем метод get_queryset, чтобы выполнить фильтрацию объектов
@@ -32,35 +40,17 @@ class CommentViewSet(viewsets.ModelViewSet):
         serializer.save(
             author_id=self.request.user.id, post_id=post.id)
 
-    def perform_destroy(self, instance):
-        """Изменяем метод delete для комментов."""
-        if instance.author != self.request.user:
-            raise PermissionDenied(
-                'У вас недостаточно прав для выполнения данного действия.')
-        super(CommentViewSet, self).perform_destroy(instance)
 
-    def perform_update(self, serializer):
-        """Изменяем метод update для комментов."""
-        # запрещаем редактирование чужих постов
-        if serializer.instance.author != self.request.user:
-            raise PermissionDenied(
-                'У вас недостаточно прав для выполнения данного действия.')
-        # подставляем автора (из запроса) и post (находим по id из url)
-        post = get_object_or_404(Post, id=self.kwargs['post_id'])
-        serializer.save(
-            author_id=self.request.user.id, post_id=post.id)
-        super(CommentViewSet, self).perform_update(serializer)
-
-
-class FollowViewSet(viewsets.ModelViewSet):
-    """Вьюсет для подписок."""
+class FollowViewSet(GetPostViewSet):
+    """Вьюсет для подписок. Наследуем от собственного базового класса
+    GetPostViewSet. С ограниченным перечнем методов"""
     serializer_class = FollowSerializer
     # добавляем пермишен: только зарегистрированные
     # пользователи могут отправлять запрос
     permission_classes = (permissions.IsAuthenticated,)
     # добавляем поле для поиска по following.username
     filter_backends = (filters.SearchFilter,)
-    # данные будут искаться по обоем полям (OR)
+    # данные будут искаться по обоим полям (OR)
     search_fields = ('following__username', 'user__username')
 
     def get_queryset(self):
@@ -87,25 +77,10 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     # устанавливаем класс пагинации
     pagination_class = LimitOffsetPagination
+    # устанавливаем пермишены
+    permission_classes = (AuthorOrReadOnly,)
 
     def perform_create(self, serializer):
         """Изменяем метод create для постов."""
         # автора берем из запроса и подставляем значение автоматически
         serializer.save(author_id=self.request.user.id)
-
-    def perform_destroy(self, instance):
-        """Изменяем метод destroy для постов."""
-        # запрещаем удаление чужих постов
-        if instance.author != self.request.user:
-            raise PermissionDenied(
-                'У вас недостаточно прав для выполнения данного действия.')
-        super(PostViewSet, self).perform_destroy(instance)
-
-    def perform_update(self, serializer):
-        """Изменяем метод update для постов."""
-        # запрещаем редактирование чужих постов
-        if serializer.instance.author != self.request.user:
-            raise PermissionDenied(
-                'У вас недостаточно прав для выполнения данного действия.')
-        serializer.save(author_id=self.request.user.id)
-        super(PostViewSet, self).perform_update(serializer)

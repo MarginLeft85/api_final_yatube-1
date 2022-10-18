@@ -63,10 +63,74 @@ http://127.0.0.1:8000/api/v1/posts/
 
 ```
 
-Получение конкретной публикации по id (GET):
+Работа с конкретной публикации по id (GET, PUT, PATCH, DELETE):
 
 ```
 http://127.0.0.1:8000/api/v1/posts/{id}/
 ```
 
+Работа с комментариями (GET, POST):
 
+```
+http://127.0.0.1:8000/api/v1/posts/{post_id}/comments/
+```
+
+Работа с конкретным комментарием по id (GET, PUT, PATCH, DELETE):
+
+```
+http://127.0.0.1:8000/api/v1/posts/{post_id}/comments/{id}/
+```
+
+Получить список групп (GET):
+
+```
+http://127.0.0.1:8000/api/v1/groups/
+```
+
+Получить конкретную группу (GET):
+
+```
+http://127.0.0.1:8000/api/v1/groups/{id}/
+```
+
+
+Работа с подписками (GET, POST):
+
+```
+http://127.0.0.1:8000/api/v1/follow/
+```
+
+Создать токен для пользователя (POST):
+
+```
+http://127.0.0.1:8000/api/v1/jwt/create/
+
+{
+"username": "string",
+"password": "string"
+}
+
+```
+
+Обновить токен для пользователя (POST):
+
+```
+http://127.0.0.1:8000/api/v1/jwt/refresh/
+
+{
+"username": "string",
+"password": "string"
+}
+
+```
+
+Проверить токен (POST):
+
+```
+http://127.0.0.1:8000/api/v1/jwt/refresh/
+
+{
+"token": "string"
+}
+
+```
