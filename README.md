@@ -63,7 +63,7 @@ http://127.0.0.1:8000/api/v1/posts/
 
 ```
 
-Работа с конкретной публикации по id (GET, PUT, PATCH, DELETE):
+Работа с конкретной публикацией по id (GET, PUT, PATCH, DELETE):
 
 ```
 http://127.0.0.1:8000/api/v1/posts/{id}/
@@ -92,7 +92,6 @@ http://127.0.0.1:8000/api/v1/groups/
 ```
 http://127.0.0.1:8000/api/v1/groups/{id}/
 ```
-
 
 Работа с подписками (GET, POST):
 
